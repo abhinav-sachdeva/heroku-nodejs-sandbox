@@ -46,7 +46,10 @@ routes.forEach((route, index) => {
 // Run the server!
 const start = async () => {
   try {
-    fastify.listen(process.env.PORT || conf.PORT, function (err, addr) {
+    fastify.listen({
+      port: process.env.PORT || conf.PORT,
+      host: '0.0.0.0'
+    }, function (err, addr) {
       if (err) throw err;
       console.log(`In your browser navigate to ${addr}/documentation`)
     });
