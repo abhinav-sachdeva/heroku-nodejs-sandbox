@@ -46,12 +46,12 @@ routes.forEach((route, index) => {
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(conf.PORT, "127.0.0.1");
+    await fastify.listen(process.env.PORT || conf.PORT, "127.0.0.1");
     // log.info(`server listening on ${fastify.server.address().port}`);
     console.log(`In your browser navigate to: http://127.0.0.1:3000/documentation`)
   } catch (err) {
     // log.error(err);
-    console.log(`Error listening on port ${conf.PORT}`)
+    console.log(`Error listening on port ${process.env.PORT || conf.PORT}`)
     if (err.code === "EADDRINUSE")
       console.log(`Port ${conf.PORT} is being used by another application. Modify port in config/dev.js and re-lauch`)
     else
