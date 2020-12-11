@@ -1,0 +1,19 @@
+{
+  "name": "fizzbuzz-api",
+  "version": "1.0.0",
+  "description": "fizzbuzz API for assessment",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "Abhinav Sachdeva",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^2.12.0",
+    "fastify-rate-limit": "^3.0.1",
+    "fastify-swagger": "^2.5.0",
+    "http-errors": "^1.7.3",
+    "pino-multi-stream": "^4.3.0"
+  }
+}
