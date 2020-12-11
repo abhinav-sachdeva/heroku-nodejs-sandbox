@@ -1,7 +1,6 @@
 exports.getFizzBuzz = function (num) {
     const respLimit = 100;
     if (num > respLimit) num = respLimit;
-    log.info(`Trim input to ${respLimit}. Original input:${num}`);
 
     const result = []
     for (let i = 1; i <= num; i++) {
