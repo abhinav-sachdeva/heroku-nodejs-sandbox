@@ -46,9 +46,12 @@ routes.forEach((route, index) => {
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(process.env.PORT || conf.PORT);
+    fastify.listen(process.env.PORT || conf.PORT, function (err, addr) {
+      if (err) throw err;
+      console.log(`In your browser navigate to ${addr}/documentation`)
+    });
     // log.info(`server listening on ${fastify.server.address().port}`);
-    console.log(`In your browser navigate to ${process.env.PORT || conf.PORT}/documentation`)
+
   } catch (err) {
     // log.error(err);
     console.log(`Error listening on port ${process.env.PORT || conf.PORT}`)
