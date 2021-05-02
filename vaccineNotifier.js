@@ -17,11 +17,11 @@ To close the app, run: pm2 stop vaccineNotifier.js && pm2 delete vaccineNotifier
 const PINCODE = process.env.PINCODE
 const EMAIL = process.env.EMAIL
 const AGE = process.env.AGE
-const ageLimit = '46'
+const ageLimit = '19'
 const appointmentsListLimit = 2
 async function main() {
     try {
-        cron.schedule('*/1  * * * *', async () => {
+        cron.schedule('*/10  * * * *', async () => {
             await checkAvailability();
         });
     } catch (e) {
@@ -33,7 +33,7 @@ async function main() {
 async function checkAvailability() {
 
     let datesArray = await fetchNext10Days();
-    let districtIds = [140]; //[140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 199, 188]
+    let districtIds = [140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 199, 188]
     districtIds.forEach((districtId) => {
         datesArray.forEach(date => {
             pingCowin(districtId, date);
@@ -54,7 +54,7 @@ function pingCowin(districtId, date) {
         if (centers.length) {
             centers.forEach(center => {
                 center.sessions.forEach((session => {
-                    if (session.min_age_limit < ageLimit && session.available_capacity > 0 && session.vaccine.toUpperCase() !== "COVAXIN") {
+                    if (session.min_age_limit < ageLimit && session.available_capacity > 0 && session.vaccine.toUpperCase() == "COVAXIN") {
 
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
