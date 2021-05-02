@@ -18,11 +18,11 @@ const PINCODE = process.env.PINCODE
 const EMAIL = process.env.EMAIL
 const AGE = process.env.AGE
 const ageLimit = '19'
-const appointmentsListLimit=2
-async function main(){
+const appointmentsListLimit = 2
+async function main() {
     try {
         cron.schedule('*/10  * * * *', async () => {
-             await checkAvailability();
+            await checkAvailability();
         });
     } catch (e) {
         console.log('an error occured: ' + JSON.stringify(e, null, 2));
@@ -33,35 +33,35 @@ async function main(){
 async function checkAvailability() {
 
     let datesArray = await fetchNext10Days();
-    let districtIds=[140,141,142,143,144,145,146,147,148,149,150,199,188]
-    districtIds.forEach((districtId)=>{
+    let districtIds = [140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 199, 188]
+    districtIds.forEach((districtId) => {
         datesArray.forEach(date => {
-            pingCowin(districtId,date);
+            pingCowin(districtId, date);
         })
     })
-  
+
 }
-let counter=0
-function pingCowin(districtId,date) {
-    console.log("ping",districtId,date)
+let counter = 0
+function pingCowin(districtId, date) {
+    console.log("ping", districtId, date)
     axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`).then((result) => {
-        const { centers }= result.data;
+        const { centers } = result.data;
         let isSlotAvailable = false;
         let dataOfSlot = "";
         let appointmentsAvailableCount = 0;
-        let centerName=""
-        let sessionName=""
-        if(centers.length) {
+        let centerName = ""
+        let sessionName = ""
+        if (centers.length) {
             centers.forEach(center => {
                 center.sessions.forEach((session => {
-                    if(session.min_age_limit < ageLimit && session.available_capacity > 0 && session.vaccine.toUpperCase() === "COVAXIN") {
-											
+                    if (session.min_age_limit < ageLimit && session.available_capacity > 0 && session.vaccine.toUpperCase() == "COVAXIN") {
+
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
-                        if(appointmentsAvailableCount <= appointmentsListLimit) {
+                        if (appointmentsAvailableCount <= appointmentsListLimit) {
                             dataOfSlot = `${dataOfSlot}\nSlot for ${session.available_capacity} is available: ${center.name} on ${session.date}`;
-                            centerName=center.name
-                            sessionName=session.date
+                            centerName = center.name
+                            sessionName = session.date
                         }
                     }
                 }))
@@ -69,9 +69,9 @@ function pingCowin(districtId,date) {
 
             dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
         }
-        if(isSlotAvailable) {
-            notifyMe(dataOfSlot,centerName,sessionName)
-            
+        if (isSlotAvailable) {
+            notifyMe(dataOfSlot, centerName, sessionName)
+
             // axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: dataOfSlot }).then(() => {
             //     console.log('Sent Notification to Phone \nStopping Pinger...')
             //     clearInterval(timer);
@@ -108,18 +108,18 @@ function pingCowin(districtId,date) {
 
 async function
 
-notifyMe(validSlots,centername,centerdate){
+    notifyMe(validSlots, centername, centerdate) {
     notifier.sendEmail(EMAIL, `${centername}: ${centerdate}`, validSlots, (err, result) => {
-        if(err) {
-            console.error({err});
+        if (err) {
+            console.error({ err });
         }
     })
 };
 
-async function fetchNext10Days(){
+async function fetchNext10Days() {
     let dates = [];
     let today = moment();
-    for(let i = 0 ; i < 10 ; i ++ ){
+    for (let i = 0; i < 10; i++) {
         let dateString = today.format('DD-MM-YYYY')
         dates.push(dateString);
         today.add(1, 'day');
@@ -129,4 +129,4 @@ async function fetchNext10Days(){
 
 
 main()
-    .then(() => {console.log('Vaccine availability checker started.');});
+    .then(() => { console.log('Vaccine availability checker started.'); });
