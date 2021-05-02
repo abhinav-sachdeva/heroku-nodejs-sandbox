@@ -4,7 +4,7 @@
   "description": "",
   "main": "vaccineNotifier.js",
   "scripts": {
-    "start": "node ./app/vaccineNotifier.js"
+    "start": "node vaccineNotifier.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -12,9 +12,7 @@
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "moment": "^2.29.1",
-    "node-cron": "^3.0.0"
-  },
-  "devDependencies": {
+    "node-cron": "^3.0.0",
     "nodemailer": "^6.6.0"
   }
 }
